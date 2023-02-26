@@ -13,6 +13,6 @@ RUN apk add py3-matplotlib
 RUN pip install --no-cache-dir flent
 WORKDIR /data
 
-#ENTRYPOINT ["/usr/bin/flent"]
+ENTRYPOINT ["/usr/local/bin/flent"]
 CMD ["flent", "rrul", "-p", "all_scaled", "-l", "60", "-H", "192.168.74.34", "-o", "/data/RRUL_Test.png", "--figure-width=20", "--figure-height=15", "-z"]
 
