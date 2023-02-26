@@ -1,20 +1,16 @@
 FROM alpine:3.7 as builder
 ENV VER 3bc455b
 RUN apk update
-RUN apk add --no-cache wget build-base autoconf automake 
+RUN apk add --no-cache wget build-base autoconf automake texinfo
 WORKDIR /tmp
 #RUN wget https://github.com/HewlettPackard/netperf/archive/netperf-${VER}.tar.gz
 #RUN tar zxf netperf-${VER}.tar.gz
 RUN wget https://github.com/HewlettPackard/netperf/tarball/${VER} -O - | tar -xz
 WORKDIR /tmp/HewlettPackard-netperf-${VER}
-RUN ls
-RUN aclocal
-RUN ls
-RUN autoconf
-RUN ls
-RUN automake --add-missing
+RUN ./autogen.sh
 RUN ls
 RUN ./configure --enable-demo --build=arm-unknown-linux-gnu 
+RUN ls
 RUN make
 
 FROM python:3.9-alpine
