@@ -23,6 +23,7 @@ ARG PLOT=all_scaled
 ARG OUTFILE=RRUL_Test.png
 ARG FIGX=20
 ARG FIXY=15
+ARG CMDSTRING=-f ${FORMAT} -p ${PLOT} -l ${LENGTH} -H ${SUT} -o /data/${OUTFILE} --figure-width=${FIGX} --figure-height=${FIGY} -z
 COPY --from=builder /tmp/HewlettPackard-netperf-${VER}/src/netserver /usr/bin/
 COPY --from=builder /tmp/HewlettPackard-netperf-${VER}/src/netperf /usr/bin/
 
@@ -34,5 +35,5 @@ RUN pip install --no-cache-dir flent
 
 WORKDIR /data
 ENTRYPOINT ["/usr/local/bin/flent"]
-CMD [$SCHEME, "-f", $FORMAT, "-p", "all_scaled", "-l", $LENGTH, "-H", $SUT, "-o", "/data/${output}", "--figure-width=${FIGX}", "--figure-height=${FIGY}", "-z"]
-
+#CMD [$SCHEME, "-f", $FORMAT, "-p", "all_scaled", "-l", $LENGTH, "-H", $SUT, "-o", "/data/${output}", "--figure-width=${FIGX}", "--figure-height=${FIGY}", "-z"]
+CMD ${CMDSTRING}
