@@ -5,9 +5,11 @@ RUN apk add wget build-base
 WORKDIR /tmp
 #RUN wget https://github.com/HewlettPackard/netperf/archive/netperf-${VER}.tar.gz
 #RUN tar zxf netperf-${VER}.tar.gz
-RUN wget https://github.com/HewlettPackard/netperf/tarball/${VER} -O - | tar xz
+RUN wget https://github.com/HewlettPackard/netperf/tarball/${VER} -O - | tar xf
 WORKDIR /tmp/HewlettPackard-netperf-${VER}
-RUN ./configure --build=arm-unknown-linux-gnu --enable-demo
+RUN ls
+RUN do $> autoconf
+RUN ./configure --enable-demo --build=arm-unknown-linux-gnu 
 RUN make
 
 FROM python:3.9-alpine
@@ -20,8 +22,8 @@ ARG PLOT=all_scaled
 ARG OUTFILE=RRUL_Test.png
 ARG FIGX=20
 ARG FIXY=15
-COPY --from=builder /tmp/netperf-netperf-${VER}/src/netserver /usr/bin/
-COPY --from=builder /tmp/netperf-netperf-${VER}/src/netperf /usr/bin/
+COPY --from=builder /tmp/HewlettPackard-netperf-${VER}/src/netserver /usr/bin/
+COPY --from=builder /tmp/HewlettPackard-netperf-${VER}/src/netperf /usr/bin/
 
 RUN pip install --no-cache-dir --upgrade pip
 RUN apk add --no-cache fping
