@@ -5,7 +5,7 @@ RUN apk add wget build-base
 WORKDIR /tmp
 #RUN wget https://github.com/HewlettPackard/netperf/archive/netperf-${VER}.tar.gz
 #RUN tar zxf netperf-${VER}.tar.gz
-RUN wget https://github.com/HewlettPackard/netperf/tarball/${VER} -O - | tar -xf
+RUN wget https://github.com/HewlettPackard/netperf/tarball/${VER} -O - | tar -xz
 WORKDIR /tmp/HewlettPackard-netperf-${VER}
 RUN ls
 RUN autoconf
