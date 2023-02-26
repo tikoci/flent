@@ -6,7 +6,7 @@ WORKDIR /tmp
 RUN wget https://github.com/HewlettPackard/netperf/archive/netperf-${VER}.tar.gz
 RUN tar zxf netperf-${VER}.tar.gz
 WORKDIR /tmp/netperf-netperf-${VER}
-RUN ./configure --build=arm-unknown-linux-gnu
+RUN ./configure --build=arm-unknown-linux-gnu --enable-demo
 RUN make
 
 FROM python:3.9-alpine
