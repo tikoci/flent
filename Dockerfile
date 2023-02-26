@@ -7,5 +7,5 @@ RUN mkdir -p /data
 WORKDIR /data
 
 ENTRYPOINT ["/usr/bin/flent"]
-CMD ["rrul", "-p", "all_scaled", "-l", "60", "-H", "netperf-eu.bufferbloat.net", "-o", "/data/RRUL_Test.png", "--figure-width=20", "--figure-height=15", "-z"]
+CMD ["rrul", "-p", "all_scaled", "-l", "60", "-H", "192.168.74.34", "-o", "/data/RRUL_Test.png", "--figure-width=20", "--figure-height=15", "-z"]
 
