@@ -13,6 +13,15 @@ RUN apk add py3-matplotlib
 RUN pip install --no-cache-dir flent
 WORKDIR /data
 
+ENV SUT=192.168.74.34
+ENV SCHEME=rrul
+ENV FORMAT=plot
+ENV LENGTH=60
+ENV PLOT=all_scaled
+ENV OUTFILE=RRUL_Test.png
+ENV FIGX=20
+ENV FIXY=15
+
 ENTRYPOINT ["/usr/local/bin/flent"]
-CMD ["flent", "rrul", "-p", "all_scaled", "-l", "60", "-H", "192.168.74.34", "-o", "/data/RRUL_Test.png", "--figure-width=20", "--figure-height=15", "-z"]
+CMD [$SCHEME, "-f", $FORMAT, "-p", "all_scaled", "-l", $LENGTH, "-H", $SUT, "-o", "/data/${output}", "--figure-width=${FIGX}", "--figure-height=${FIGY}", "-z"]
 
