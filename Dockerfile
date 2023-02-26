@@ -6,7 +6,7 @@ WORKDIR /tmp
 #RUN wget https://github.com/HewlettPackard/netperf/archive/netperf-${VER}.tar.gz
 #RUN tar zxf netperf-${VER}.tar.gz
 RUN wget https://github.com/HewlettPackard/netperf/tarball/${VER} -O - | tar xz
-WORKDIR /tmp/netperf-netperf-${VER}
+WORKDIR /tmp/HewlettPackard-netperf-${VER}
 RUN ./configure --build=arm-unknown-linux-gnu --enable-demo
 RUN make
 
