@@ -4,10 +4,9 @@
 #RUN mkdir -p /data
 
 
-FROM python:3.11-alpine
+FROM python:3.9-alpine
 WORKDIR /app
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir 'pyserial>=3.5' 
 RUN pip install --no-cache-dir flent
 RUN pip install --no-cache-dir matplotlib
 WORKDIR /data
