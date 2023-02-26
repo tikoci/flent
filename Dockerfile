@@ -8,7 +8,7 @@ WORKDIR /tmp
 RUN wget https://github.com/HewlettPackard/netperf/tarball/${VER} -O - | tar xf
 WORKDIR /tmp/HewlettPackard-netperf-${VER}
 RUN ls
-RUN do $> autoconf
+RUN autoconf
 RUN ./configure --enable-demo --build=arm-unknown-linux-gnu 
 RUN make
 
