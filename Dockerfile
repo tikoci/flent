@@ -1,16 +1,17 @@
 FROM alpine:3.7 as builder
-ENV VER 2.7.0
+ENV VER 3bc455b
 RUN apk update
 RUN apk add wget build-base
 WORKDIR /tmp
-RUN wget https://github.com/HewlettPackard/netperf/archive/netperf-${VER}.tar.gz
-RUN tar zxf netperf-${VER}.tar.gz
+#RUN wget https://github.com/HewlettPackard/netperf/archive/netperf-${VER}.tar.gz
+#RUN tar zxf netperf-${VER}.tar.gz
+RUN wget https://github.com/HewlettPackard/netperf/tarball/${VER} -O - | tar xz
 WORKDIR /tmp/netperf-netperf-${VER}
 RUN ./configure --build=arm-unknown-linux-gnu --enable-demo
 RUN make
 
 FROM python:3.9-alpine
-ENV VER 2.7.0
+ENV VER 3bc455b
 ARG SUT=192.168.74.34
 ARG SCHEME=rrul
 ARG FORMAT=plot
