@@ -1,7 +1,7 @@
 FROM alpine:3.7 as builder
 ENV VER 3bc455b
 RUN apk update
-RUN apk add wget build-base
+RUN apk add --no-cache wget build-base autoconf
 WORKDIR /tmp
 #RUN wget https://github.com/HewlettPackard/netperf/archive/netperf-${VER}.tar.gz
 #RUN tar zxf netperf-${VER}.tar.gz
