@@ -9,9 +9,14 @@ COPY --from=ghcr.io/tikoci/netperf:master /usr/bin/netperf /usr/bin/
 # COPY --from=gobuild /usr/bin/irtt /usr/bin/
 
 RUN apk add --no-cache fping iperf3 
-RUN apk add python3 py3-numpy py3-matplotlib
-RUN pip install --no-cache-dir --upgrade pip
-RUN pip install flent
+
+ENV PYTHONUNBUFFERED=1
+RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
+RUN python3 -m ensurepip
+RUN pip3 install --no-cache --upgrade pip setuptools
+
+RUN apk add --no-cache py3-numpy py3-matplotlib
+RUN pip3 install flent
 #RUN ln -s /usr/local/bin/flent /usr/bin/flent
 
 ENV SERVER 198.18.18.18
