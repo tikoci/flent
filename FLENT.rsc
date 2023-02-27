@@ -27,14 +27,14 @@
     ## MAIN SETTINGS FOR CONTAINER
 
     # name of container, used in comment to find - could be multiple so add a "containername1[2,...]" to things 
-    :local ocipkg "FLENT"
+    :local ocipkg "flent"
     :local ocipushuser "tikoci"
     :local containerregistry "ghcr.io"
     :local scripthelpername "FLENT"
     :local containernum "1" 
     :local containeripbase "198.19.102."
     :local containerprefix "24"
-    :local containerver "master"
+    :local containerver "main"
     :local containerbootatstart "yes"
     :local containeraddresslist "LAN"
     :local containerhostip "254"
@@ -46,7 +46,10 @@
     :set ($containerenvs->"DURATION") "60"
     :set ($containerenvs->"PLOT") "all_scaled"
     :set ($containerenvs->"PORT") "12865"
-    :set ($containerenvs->"OPTS") "-z"
+    :set ($containerenvs->"OPT1") "-z"
+    :set ($containerenvs->"OPT2") "-v"
+    :set ($containerenvs->"OPT3") ""
+    :set ($containerenvs->"OPT4") ""
 
     :local containermounts [:toarray ""]
     # TODO figure out where files go...

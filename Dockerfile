@@ -28,10 +28,13 @@ ENV SERVER 198.18.18.18
 ENV TEST rrul
 ENV DURATION 60
 ENV PLOT all_scaled
-ENV OPTS -z
+ENV OPT1 -z 
+ENV OPT2 -v
+ENV OPT3 
+ENV OPT4
 ENV PORT 12865
 
 WORKDIR /data
 # ENTRYPOINT ["/usr/local/bin/flent"]
 #CMD [$SCHEME, "-f", $FORMAT, "-p", "all_scaled", "-l", $LENGTH, "-H", $SUT, "-o", "/data/${output}", "--figure-width=${FIGX}", "--figure-height=${FIGY}", "-z"]
-CMD flent $SCHEME -p $PLOT -l $DURATION -H $SERVER --netperf-control-port $PORT -o /data/$test-$duration-$plot-$server-$(date -u +"%Y%m%d%H%M").png $OPTS
+CMD flent $TEST -p $PLOT -l $DURATION -H $SERVER --netperf-control-port $PORT -o /data/$TEST-$DURATION-$PLOT-$SERVER-$(date -u +"%Y%m%d%H%M").png $OPT1 $OPT2 $OPT3 $OPT4
