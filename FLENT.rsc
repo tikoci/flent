@@ -51,10 +51,16 @@
     :set ($containerenvs->"OPT2") "-v"
  
     :local containermounts [:toarray ""]
+    :set ($containermounts->"data") "/data"
+ 
     # TODO figure out where files go...
 
     # container specific variables
     :local netserverport ($containerenvs->"PORT")
+
+    :if ([:typeof $hostid]~"str|num") do={
+        :set containernum $hostid
+    }
 
     # calculate name and tag (do not change these)
     :local containername "$ocipkg" 
@@ -74,7 +80,7 @@
         :set rootdisk "nfs1"
     }
     :local rootpath "$rootdisk/$containertag"
-    :put "using disk path prefix of $rootpath, use path= option to change"
+    #:put "using disk path prefix of $rootpath, use path= option to change"
 
     # branch= option
     :if ([:typeof $branch]="str") do={
@@ -82,7 +88,7 @@
     } 
 
     :if ($dump = "yes") do={
-        :put "FLENT is using..."
+        :put "FLENT dump (as calculated, any existing container settings rule)"
         :put "     branch (ARG)           =   $branch                   "
         :put "     force (ARG)            =   $force                    "
         :put "     path (ARG)             =   $path                     "
@@ -110,7 +116,40 @@
         :put "     rootpath               =   $rootpath                  "
     }
 
-    # "$FLENT build" - removes any existing and install new container
+    :local REGISTRY do={
+        /container/config {
+            :local curregurl [get registry-url]
+            :if ([:typeof $url]="str") do={
+                :put "registry set to provided url: $url"
+                set registry-url=$url 
+                /;
+                :return $curregurl 
+            }
+            :if ([:typeof $arg2]="str") do={ 
+                :if ($arg2~"github|ghcr") do={
+                    set registry-url="https://ghcr.io"
+                    :put "registry updated from $curregurl to GitHub Container Store (ghcs.io)"
+                    /;
+                    :return $curregurl
+                }
+                :if ($arg2~"docker") do={
+                    set registry-url="https://registry-1.docker.io"
+                    :put "registry updated from $curregurl to Docker Hub"
+                    /;
+                    :return $curregurl
+                } else={
+                    :error "setting invalid or unknown registry - failing"
+                }
+            } else={
+                :put "current container registry is: $curregurl"
+                /;
+                :return $curregurl
+            }
+        }
+        :error "unhandled path in \$FLENT registry - should return something"
+    }
+
+    # "$FLENT make" - removes any existing and install new container
     :if ($action = "make") do={
 
         ## WARN BEFORE CONTINUE
@@ -128,6 +167,7 @@
         # envs= option
         /container/envs {
             :put "check envs"
+            add name="_$containername" key="lasttag" value=$containertag
             :foreach k,v in=$containerenvs do={
                 :put "setting $containertag env $k to $v"
                 add name="$containertag" key="$k" value=$v comment="#$containertag"
@@ -138,7 +178,7 @@
             :put "check mounts"
             :foreach k,v in=$containermounts do={
                 :put "setting $containertag env $k to $v"
-                add name="$containertag" src="$rootpath-$[:tostr $k]" dst="$[:tostr $v]" comment="#$containertag"
+                add name="$containertag-$k" src="$rootpath-$[:tostr $k]" dst="$[:tostr $v]" comment="#$containertag"
             }
         }
 
@@ -172,27 +212,39 @@
                 :put "adding new $containertag container on $containerethname using $(rootdisk)/$(containername).tar"
                 :set containerid [add file="$tarfile" interface="$containerethname" logging=$containerlogging root-dir="$(rootpath)-root"]
             } else={
-                :local lastreg [$FLENT registry github]
+                :local lastreg [$REGISTRY github]
                 # TODO handle no building paths here if options messing
                 :local containerpulltag "$(containerregistry)/$(ocipushuser)/$(containername):$(containerver)"
                 :put "pulling new $containertag container on $containerethname using $containerpulltag"
                 :set containerid [add remote-image="$containerpulltag" interface="$containerethname" logging=$containerlogging root-dir="$(rootpath)-root"]
-                [$FLENT registry url=$lastreg]
+                [$REGISTRY url=$lastreg]
             }
+            :put "setting comment #$containertag"
             set $containerid comment="#$containertag"
-            set $containerid start-on-boot=$containerbootatstart
-            set $containerid mounts=[/container/mounts find comment~"#$containertag"]
+            :put "setting start-on-boot $containerbootatstart"
+
+            :local lmountstr [mount find comment~"#$containertag"]
+            :local lmountstrlen [:len $lmountstr]
+            :put "setting $lmountstrlen mounts $[:tostr $lmountstr]"
+            :if ($lmountstrlen > 0) do={
+                set $containerid mounts=$lmountstr
+            }
+
+            :put "setting any envs"
             :if [/container/envs find name="$containertag"] do={
+                :put "setting env tag tp $containertag"
                 set $containerid env="$containertag" 
             }
 
-            [$FLENT start]
+            :put "make done, sending start"
+            [$FLENT start hostid=$containernum]
         }
         / {
             :put "** done"
         }
         :return ""
     }
+
 
     :if ($action = "start") do={
         /container {
@@ -233,38 +285,7 @@
         }
     }
 
-    :if ($action = "registry") do={
-        /container/config {
-            :local curregurl [get registry-url]
-            :if ([:typeof $url]="str") do={
-                :put "registry set to provided url: $url"
-                set registry-url=$url 
-                /;
-                :return $curregurl 
-            }
-            :if ([:typeof $arg2]="str") do={ 
-                :if ($arg2~"github|ghcr") do={
-                    set registry-url="https://ghcr.io"
-                    :put "registry updated from $curregurl to GitHub Container Store (ghcs.io)"
-                    /;
-                    :return $curregurl
-                }
-                :if ($arg2~"docker") do={
-                    set registry-url="https://registry-1.docker.io"
-                    :put "registry updated from $curregurl to Docker Hub"
-                    /;
-                    :return $curregurl
-                } else={
-                    :error "setting invalid or unknown registry - failing"
-                }
-            } else={
-                :put "current container registry is: $curregurl"
-                /;
-                :return $curregurl
-            }
-        }
-        :error "unhandled path in \$FLENT registry - should return something"
-    }
+    
 
     :if ($action = "stop") do={
         /container {
@@ -331,6 +352,10 @@
     :if ($action = "shell") do={
         /container {
             :local activeid [find comment~"#$containertag"]
+            :if ([:len $activeid] = 0) do={
+                :local activename [/container/envs get [/container/envs find name="_$containername" key="lasttag"] value]
+                :set activeid [find comment~"#$activename"]
+            }
             :if ([:len $activeid] < 1) do={
                 :error "$containertag could not find the container, shell is not possible"
             }
@@ -360,6 +385,15 @@
         :return ""
     }
 
+    :if ($action = "log") do={
+        /log print where topics~"container" and time>([/system clock get time] - 2m)
+        :return ""
+    }
+    
+    :if ($action = "tail") do={
+        /log print follow where topics~"container" and time>([/system clock get time] - 2m)
+        :return ""
+    }
     :put  "Usage: \$$(scripthelpername) make|clean|shell|dump|start|stop|registry "
     :error "Bad Command: see docs at https://github.com/$(ocipushuser)/$(containername)"
 }
@@ -369,7 +403,7 @@
 
 # To build:
 # $FLENT clean
-# $FLENT make [path=<disk>] [branch=<tagver>]
+# $FLENT make [path=<disk_prefix>] [branch=<tagver>] [hostid=<num=1>] [dump=yes]
 
 # To control/manage
 # $FLENT stop
