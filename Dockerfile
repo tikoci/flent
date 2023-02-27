@@ -1,5 +1,5 @@
 
-FROM python:3.9-alpine
+FROM python:3.10-alpine
 
 COPY --from=ghcr.io/tikoci/netserver /usr/bin/netserver /usr/bin/
 COPY --from=ghcr.io/tikoci/netperf:master /usr/bin/netperf /usr/bin/
