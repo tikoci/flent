@@ -22,7 +22,7 @@ ENV OUTFILE=RRUL_Test.png
 # COPY --from=builder /tmp/HewlettPackard-netperf-${VER}/src/netserver /usr/bin/
 # COPY --from=builder /tmp/HewlettPackard-netperf-${VER}/src/netperf /usr/bin/
 COPY --from=ghcr.io/tikoci/netserver /usr/bin/netserver /usr/bin/
-COPY --from=ghcr.io/tikoci/netperf /usr/bin/netperf /usr/bin/
+COPY --from=ghcr.io/tikoci/netperf:master /usr/bin/netperf /usr/bin/
 
 
 RUN pip install --no-cache-dir --upgrade pip
