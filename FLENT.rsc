@@ -48,9 +48,7 @@
     :set ($containerenvs->"PORT") "12865"
     :set ($containerenvs->"OPT1") "-z"
     :set ($containerenvs->"OPT2") "-v"
-    :set ($containerenvs->"OPT3") ""
-    :set ($containerenvs->"OPT4") ""
-
+ 
     :local containermounts [:toarray ""]
     # TODO figure out where files go...
 
