@@ -10,7 +10,8 @@ COPY --from=ghcr.io/tikoci/netperf:master /usr/bin/netperf /usr/bin/
 # py3-matplotlib
 RUN apk add --no-cache fping iperf3 py3-numpy iperf3
 RUN pip install --no-cache-dir --upgrade pip
-RUN pip install --no-cache-dir matplotlib flent
+RUN pip install matplotlib 
+RUN pip install flent
 #RUN ln -s /usr/local/bin/flent /usr/bin/flent
 
 ENV SERVER 198.18.18.18
