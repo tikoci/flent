@@ -15,7 +15,7 @@ FROM alpine:latest as gobuild
 RUN apk update
 RUN apk add --no-cache go
 ENV GOPATH /usr
-RUN apk go get -u github.com/heistp/irtt/cmd/irtt
+RUN go get -u github.com/heistp/irtt/cmd/irtt
 
 FROM python:3.9-alpine
 #ENV VER 3bc455b
