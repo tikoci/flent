@@ -1,5 +1,6 @@
 
-FROM python:3.10-alpine
+#FROM python:3.10-alpine
+FROM alpine:latest
 
 COPY --from=ghcr.io/tikoci/netserver /usr/bin/netserver /usr/bin/
 COPY --from=ghcr.io/tikoci/netperf:master /usr/bin/netperf /usr/bin/
@@ -7,11 +8,10 @@ COPY --from=ghcr.io/tikoci/netperf:master /usr/bin/netperf /usr/bin/
 # TODO, more complex, irtt uses go, which doesnt like musl/alpine...
 # COPY --from=gobuild /usr/bin/irtt /usr/bin/
 
-# py3-matplotlib
 RUN apk add --no-cache fping iperf3 
-RUN apk add py3-numpy py3-matplotlib 
-RUN pip install --no-cache-dir --user --install-option="--prefix=/usr" --upgrade pip
-RUN pip install --user --install-option="--prefix=/usr" flent
+RUN apk add py3-numpy py3-matplotlib
+RUN pip install --no-cache-dir --upgrade pip
+RUN pip install flent
 #RUN ln -s /usr/local/bin/flent /usr/bin/flent
 
 ENV SERVER 198.18.18.18

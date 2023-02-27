@@ -5,13 +5,21 @@
 
 
 ```
-/ {
-/tool/fetch url="https://raw.githubusercontent.com/tikoci/netserver/master/NETPERF.rsc"        
+{
+/tool/fetch url="https://raw.githubusercontent.com/tikoci/netserver/master/NETPERF.rsc" ;     
 :import "NETPERF.rsc";
+}
+
+{
 /tool/fetch url="https://raw.githubusercontent.com/tikoci/netserver/master/NETSERVER.rsc"
 :import "NETSERVER.rsc";
+}
+
+{
 /tool/fetch url="https://raw.githubusercontent.com/tikoci/flent/main/FLENT.rsc"
-:import "FLENT.rsc";
+:import "FLENT.rsc"
+}
+
 }
 
 ```
