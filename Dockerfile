@@ -7,9 +7,9 @@ COPY --from=ghcr.io/tikoci/netperf:master /usr/bin/netperf /usr/bin/
 # TODO, more complex, irtt uses go, which doesnt like musl/alpine...
 # COPY --from=gobuild /usr/bin/irtt /usr/bin/
 
-RUN apk add --no-cache fping py3-numpy py3-matplotlib iperf3
-RUN pip install --no-cache-dir flent
-RUN ln -s /usr/local/bin/flent /usr/bin/flent
+RUN apk add --no-cache fping iperf3
+RUN pip install --no-cache-dir numpy matplotlib flent
+#RUN ln -s /usr/local/bin/flent /usr/bin/flent
 
 ENV SERVER 198.18.18.18
 ENV TEST rrul
