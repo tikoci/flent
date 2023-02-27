@@ -41,6 +41,7 @@
     :local containerbridge ""
     :local containerlogging "yes"
     :local containerenvs [:toarray ""]
+    :local maxwaitforstart "3m"
     :set ($containerenvs->"TEST") "rrul"
     :set ($containerenvs->"SERVER") "198.18.18.18"
     :set ($containerenvs->"DURATION") "60"
@@ -213,7 +214,7 @@
                     
                 }
                 :delay 7s
-                :if ( [:timestamp] > ($waitstart+[:totime 90s]) ) do={
+                :if ( [:timestamp] > ($waitstart+[:totime $maxwaitforstart]) ) do={
                     /log print proplist=
                     :put "opps. took too long..."
                     :put "dumping logs..."
