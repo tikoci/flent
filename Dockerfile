@@ -43,4 +43,4 @@ WORKDIR /data
 #CMD [$SCHEME, "-f", $FORMAT, "-p", "all_scaled", "-l", $LENGTH, "-H", $SUT, "-o", "/data/${output}", "--figure-width=${FIGX}", "--figure-height=${FIGY}", "-z"]
 CMD flent $TEST -p $PLOT -l $DURATION -H $SERVER --netperf-control-port $PORT -o /data/$TEST-$DURATION-$PLOT-$SERVER-$(date -u +"%Y%m%d%H%M").png $OPT1 $OPT2
 
-flent rrul -p all_scaled -l 15 -H 198.18.18.18 -o /data/chart.png -z -v
+# flent rrul -p all_scaled -l 15 -H 198.18.18.18 -o /data/chart.png -z -v
